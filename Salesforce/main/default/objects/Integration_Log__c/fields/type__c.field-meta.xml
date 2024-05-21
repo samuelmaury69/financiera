@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>type__c</fullName>
+    <externalId>false</externalId>
+    <label>type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>InsertError</fullName>
+                <default>false</default>
+                <label>InsertError</label>
+            </value>
+            <value>
+                <fullName>UpdateError</fullName>
+                <default>false</default>
+                <label>UpdateError</label>
+            </value>
+            <value>
+                <fullName>UpsertError</fullName>
+                <default>false</default>
+                <label>UpsertError</label>
+            </value>
+            <value>
+                <fullName>ParserError</fullName>
+                <default>false</default>
+                <label>ParserError</label>
+            </value>
+            <value>
+                <fullName>ServiceError</fullName>
+                <default>false</default>
+                <label>ServiceError</label>
+            </value>
+            <value>
+                <fullName>Not Found</fullName>
+                <default>false</default>
+                <label>Not Found</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
