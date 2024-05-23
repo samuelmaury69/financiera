@@ -2,17 +2,28 @@ public class AccountRemoteSiteConection {
     // Método para consumir el servicio y procesar el JSON
     // AccountRemoteSiteConection.getAccountFrombankitti();
     public static HttpResponse getAccountFromBankitti(Map<String,String> parametersMap){
-    	//Web_Service_Endpoint__mdt wsEndpSetting= Web_Service_Endpoint__mdt.getInstance('personok');
+        String  endpoint;
+        //Web_Service_Endpoint__mdt wsEndpSetting= Web_Service_Endpoint__mdt.getInstance('personok');
         Web_Service_Endpoint__mdt wsEndpSetting= Web_Service_Endpoint__mdt.getInstance('procustion_service');
-        string endpoint = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : wsEndpSetting.URL__c;
-		endpoint = addParametersToEndpoint(endpoint,parametersMap);
+       // List<Ueno_Service_Domain__c> Service = [select Id, ApiKey__c, DomainName__c  from Ueno_Service_Domain__c ];
+        Ueno_Service_Domain__c Service = Ueno_Service_Domain__c.getOrgDefaults(); 
+        //if(Service.size()>0){
+             endpoint = Service.DomainName__c+wsEndpSetting.path__c;
+         //}
+        //string endpoint = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : wsEndpSetting.path__c;
+       
+        endpoint = addParametersToEndpoint(endpoint,parametersMap);
         // Realizar la llamada al servicio
-		HttpResponse response;
+        HttpResponse response;
         try{
             HttpRequest request = new HttpRequest();
+            system.debug(endpoint);
             request.setEndpoint(endpoint);
             request.setMethod('GET');
-            system.debug(endpoint);
+            //request.setHeader('Authorization', 'Bearer '+Service[0].ApiKey__c);
+           	request.setHeader('Content-Type','application/json');
+            request.setHeader('apikey', Service.ApiKey__c);
+            request.setTimeout(120000);
             response = new Http().send(request);
             if (response.getStatusCode() == 200) {
                 // Obtener el cuerpo de la respuesta
@@ -34,7 +45,7 @@ public class AccountRemoteSiteConection {
             return null;
         }
         
-		//System.debug('response: ' + response);
+        //System.debug('response: ' + response);
         // Verificar si la llamada fue exitosa
         return response;
     }

@@ -5,14 +5,14 @@ public with sharing class ProductsControllerTest {
     public static void getAccountTest(){
         Account acc = new Account();
         acc.Name = 'Test Account';
-        acc.PersonCode__c =123;
+        acc.PersonCode__c = 123;
         insert acc;
 
+        Account result = null;
         Test.startTest();
-            ProductsController.getAccount(acc.Id);
+            result = ProductsController.getAccount(acc.Id);
         Test.stopTest();
 
-
-
+        System.Assert(result.PersonCode__c != null);
     }
 }

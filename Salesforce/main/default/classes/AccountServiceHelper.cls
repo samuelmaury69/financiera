@@ -33,14 +33,10 @@ public class AccountServiceHelper {
                     }
                     // Procesar el objeto Account
                 }else {
-                    String e = result.message;
+                    String e = result.message.replaceFirst('System.SObjectException:','').replaceFirst(' System.DmlException: Upsert failed. First exception on row 0; first error: INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST, ','').replaceFirst('System.TypeException:','').replaceFirst('System.NullPointerException: Argument cannot be null. ','');
                     Wr.success =false;
-                    personMap.put('message',e.replace('System.TypeException:',''));
-                	personMap.put('message',e.replace(' System.DmlException: Upsert failed. First exception on row 0; first error: INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST, ',''));
-                	personMap.put('message',e.replace('System.SObjectException:',''));
-                    Wr.message =e.replace('System.TypeException:','');
-                	Wr.message =e.replace(' System.DmlException: Upsert failed. First exception on row 0; first error: INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST, ','');
-                	Wr.message =e.replace('System.SObjectException:','');
+                    personMap.put('message',e);
+                    Wr.message = e;
                     IntegrationLogUtils.getIntegrationLogFromAccount(personMap);
                     // Manejar la excepción
                 }

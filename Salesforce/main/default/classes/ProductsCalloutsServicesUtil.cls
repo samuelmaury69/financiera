@@ -3,7 +3,7 @@
 * @author            : marco.casanova@vurpix.com
 * @TKs               : 
 * @group             : 
-* @last modified on  : 05-16-2024
+* @last modified on  : 05-22-2024
 * @last modified by  : marco.casanova@vurpix.com
 **/
 public with sharing class ProductsCalloutsServicesUtil {
@@ -13,15 +13,17 @@ public with sharing class ProductsCalloutsServicesUtil {
         string result;
         Web_Service_Endpoint__mdt wsEndpSetting;
         string responseJSON;
-        string endpoint; 
+        string endpoint;
+        Ueno_Service_Domain__c domain = Ueno_Service_Domain__c.getOrgDefaults(); 
         wsEndpSetting = Web_Service_Endpoint__mdt.getInstance('productsLWC');//cambiar
-        string url = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : wsEndpSetting.URL__c + '/' + personCode + '/products';
+        string url = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : domain.DomainName__c + wsEndpSetting.path__c + '/' + personCode + '/products';
         Map<String, String> parametersMap = new Map<String, String>{'productType' => productType};
             endpoint = AccountRemoteSiteConection.addParametersToEndpoint(url, parametersMap);
         HttpRequest req = new HttpRequest();
         httpWithRetry http = new httpWithRetry();
         req.setEndpoint(endpoint);      
         req.setHeader('Content-Type','application/json');
+        req.setHeader('apikey',domain.ApiKey__c);
         req.setMethod('GET');
         req.setTimeout(120000);
         
@@ -47,11 +49,16 @@ public with sharing class ProductsCalloutsServicesUtil {
                 }
             }
         }else{       
-            Map<String, Object> jsonMap = (Map<String, Object>) JSON.deserializeUntyped(responseJSON);
-            ProductWrapper productWrap = new ProductWrapper();
-            productWrap.message = (String) jsonMap.get('message');
-            productWrap.isError = true;
-            result = JSON.serialize(productWrap);
+            try{
+                Map<String, Object> jsonMap = (Map<String, Object>) JSON.deserializeUntyped(responseJSON);
+                ProductWrapper productWrap = new ProductWrapper();
+                productWrap.message = (String) jsonMap.get('message');
+                productWrap.isError = true;
+                result = JSON.serialize(productWrap);
+            }
+            catch (Exception e){
+                result = 'Error: ' + tResponse.getStatusCode() + ' - ' + tResponse.getStatus();
+            }
         }
         
         return result;

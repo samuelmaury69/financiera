@@ -3,7 +3,7 @@
  * @author            : marco.casanova@vurpix.com
  * @TKs               : 
  * @group             : 
- * @last modified on  : 05-16-2024
+ * @last modified on  : 05-22-2024
  * @last modified by  : marco.casanova@vurpix.com
 **/
 public with sharing class ProductsMovementsCalloutsServicesUtil {
@@ -14,15 +14,17 @@ public with sharing class ProductsMovementsCalloutsServicesUtil {
         Web_Service_Endpoint__mdt wsEndpSetting;
         string responseJSON;
         string endpoint;
+        Ueno_Service_Domain__c domain = Ueno_Service_Domain__c.getOrgDefaults(); 
         string append =  '/products/'+ productType + '/' + accountNumber + '/transactions';
         wsEndpSetting = Web_Service_Endpoint__mdt.getInstance('productsMovementsLWC');
-        string url = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : wsEndpSetting.URL__c + append;
+        string url = wsEndpSetting.isMock__c ? wsEndpSetting.Mock_URL__c : domain.DomainName__c + wsEndpSetting.URL__c + append;
         Map<String, String> parametersMap = new Map<String, String>{'offset' => offset,'limit' => pageLimit};//revisar
 		endpoint = AccountRemoteSiteConection.addParametersToEndpoint(url, parametersMap);	
         HttpRequest req = new HttpRequest();
         ProductsCalloutsServicesUtil.httpWithRetry http = new ProductsCalloutsServicesUtil.httpWithRetry();
         req.setEndpoint(endpoint);      
         req.setHeader('Content-Type','application/json');
+        req.setHeader('apikey', domain.ApiKey__c);
         req.setMethod('GET');
         req.setTimeout(120000);
 

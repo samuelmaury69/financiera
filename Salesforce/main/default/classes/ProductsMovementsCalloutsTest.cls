@@ -1,6 +1,19 @@
+/**
+ * @description       : 
+ * @author            : marco.casanova@vurpix.com
+ * @TKs               : 
+ * @group             : 
+ * @last modified on  : 05-22-2024
+ * @last modified by  : marco.casanova@vurpix.com
+**/
 @isTest
 public class ProductsMovementsCalloutsTest {
-    
+    @TestSetup static void setup() {
+        Ueno_Service_Domain__c uenoDomain = new Ueno_Service_Domain__c();
+        uenoDomain.ApiKey__c = '09-746e-4e1d';
+        uenoDomain.DomainName__c = 'https://platform-kong-public-d.com';
+        insert uenoDomain;  
+    }
     @IsTest
     static void ProductsCalloutsServicesUtilSuccessSavings() {	
         String savingResponseJSON = '{ "offset": 0, "limit": 25, "movements": [{"movementType":"Deposit","date":"2024-03-19T10:15:23.000Z","status":"Completed","concept":"Salary","balance":{"amount":5000,"currency":{"description":"United States Dollar","code":"USD"}}},{"movementType":"Withdrawal","date":"2024-03-20T14:30:45.000Z","status":"Pending","concept":"Rent","balance":{"amount":1200,"currency":{"description":"United States Dollar","code":"USD"}}},{"movementType":"Transfer","date":"2024-03-21T09:45:12.000Z","status":"Completed","concept":"Gift","balance":{"amount":300,"currency":{"description":"United States Dollar","code":"USD"}}},{"movementType":"Payment","date":"2024-03-22T08:00:00.000Z","status":"Completed","concept":"Utility bill","balance":{"amount":150,"currency":{"description":"United States Dollar","code":"USD"}}},{"movementType":"Deposit","date":"2024-03-23T16:20:30.000Z","status":"Completed","concept":"Bonus","balance":{"amount":1000,"currency":{"description":"United States Dollar","code":"USD"}}}]}';

@@ -1,6 +1,11 @@
 @isTest
 public class ProductsCalloutsServicesUtilTest {
-    
+    @TestSetup static void setup() {
+        Ueno_Service_Domain__c uenoDomain = new Ueno_Service_Domain__c();
+        uenoDomain.ApiKey__c = '09-746e-4e1d';
+        uenoDomain.DomainName__c = 'https://platform-kong-public-d.com';
+        insert uenoDomain;  
+    }
     @IsTest
     static void ProductsCalloutsServicesUtilSuccessSavings() {	
         String savingJsonResponse = '{ "savings": [ { "accountNumber": "619541564", "denomination": "NAME", "officeCode": "61", "status": "N", "statusChangeDate": "2024-03-08T03:00:00.000Z", "balance": { "amount": 18512, "avgAmount": 18512, "currency": { "code": "GS", "description": "GUARANIES" } }, "openingDate": "2024-03-08T03:00:00.000Z", "dueDate": null, "cancellationCodeCause": null, "rateCode": "92", "rateValue": null, "movements": [ { "accountNumber": "619541564", "personCode": null, "denomination": "NAME", "movementTypeCode": "D", "movementType": "Debito", "date": "2024-03-14T03:00:00.000Z", "userCode": "INFONET_2", "balance": { "amount": 35000, "currency": { "code": "GS", "description": "GUARANIES" } }, "officeCode": "61", "errorCode": null, "status": "N", "causeCode": null, "causeDescription": null, "bankDescription": "BANCO CONTINENTAL S.A.E.C.A.", "originOfficeDescription": "CASA MATRIZ", "concept": "PIZZA HUT-PLG", "rateCode": null, "rateValue": null, "categoryCode": null, "categoryDescription": null, "isReversed": "N", "reversionUserCode": null, "reversionTime": null, "hasIssuedNotice": "N", "parentTransaction": { "transactionDescription": "COMPRA EN NEGOCIOS (POS)" }, "transaction": { "transactionDescription": "EXTRACCIONES VIA TED" }, "documentNumber": 3739861403, "documentNumber2": null, "documentNumber3": 3739861403, "documentNumber4": 4, "isProtected": "S" } ] } ] }';
@@ -68,13 +73,13 @@ public class ProductsCalloutsServicesUtilTest {
         Assert.isNotNull(finalResultSaving);
     }
     
-        @isTest 
-    	static void testGetCalloutimeout() {
+    @isTest 
+    static void testGetCalloutimeout() {
         String savingJsonResponse = '{ "savings": [ { "accountNumber": "619541564", "denomination": "NAME", "officeCode": "61", "status": "N", "statusChangeDate": "2024-03-08T03:00:00.000Z", "balance": { "amount": 18512, "avgAmount": 18512, "currency": { "code": "GS", "description": "GUARANIES" } }, "openingDate": "2024-03-08T03:00:00.000Z", "dueDate": null, "cancellationCodeCause": null, "rateCode": "92", "rateValue": null, "movements": [ { "accountNumber": "619541564", "personCode": null, "denomination": "NAME", "movementTypeCode": "D", "movementType": "Debito", "date": "2024-03-14T03:00:00.000Z", "userCode": "INFONET_2", "balance": { "amount": 35000, "currency": { "code": "GS", "description": "GUARANIES" } }, "officeCode": "61", "errorCode": null, "status": "N", "causeCode": null, "causeDescription": null, "bankDescription": "BANCO CONTINENTAL S.A.E.C.A.", "originOfficeDescription": "CASA MATRIZ", "concept": "PIZZA HUT-PLG", "rateCode": null, "rateValue": null, "categoryCode": null, "categoryDescription": null, "isReversed": "N", "reversionUserCode": null, "reversionTime": null, "hasIssuedNotice": "N", "parentTransaction": { "transactionDescription": "COMPRA EN NEGOCIOS (POS)" }, "transaction": { "transactionDescription": "EXTRACCIONES VIA TED" }, "documentNumber": 3739861403, "documentNumber2": null, "documentNumber3": 3739861403, "documentNumber4": 4, "isProtected": "S" } ] } ] }';
         
         SingleRequestMock fakeResponse = new SingleRequestMock(500,'timeOut',savingJsonResponse,null);
         Test.setMock(HttpCalloutMock.class, fakeResponse); 
-            
+        
         test.startTest();
         ProductsCalloutsServicesUtil.doTimeOutExceptionWhenFalse = true;
         string finalResultSaving = ProductsCalloutsServicesUtil.productJsonSavingsCallout('555', 'SAVINGS');
