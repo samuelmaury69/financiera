@@ -3,15 +3,15 @@ global with sharing class AccountMappingService {
     global static List<AccountMappingResult> mapAccountData(List<AccountMappingRequest> requests) {
         System.debug('mapAccountData Function');
         List<AccountMappingResult> results = new List<AccountMappingResult>();
-        system.debug(requests);
-        
         for (AccountMappingRequest request : requests) {
             try {
-                AccountServiceHelper.Wrapper accountWrapper = AccountServiceHelper.getAccountFrombankitti(request.documentId, request.documentType, request.phoneNumber);
+                //AccountServiceHelper.Wrapper accountWrapper = AccountServiceHelper.getAccountFrombankitti(request.documentId, request.documentType, request.phoneNumber);
+                MappingHelper.Wrapper accountWrapper = MappingHelper.getAccountFrombankitti(request.documentId, request.documentType);
                 AccountMappingResult result = new AccountMappingResult();
-                accountWrapper.printValues();
+               // accountWrapper.printValues();
                 result.success = accountWrapper.success;
                 result.message = accountWrapper.message;
+                result.code = accountWrapper.code;
                 
                 if (accountWrapper.success) {
                     result.accountId = accountWrapper.accountId;
@@ -22,8 +22,10 @@ global with sharing class AccountMappingService {
                 results.add(result);
             } catch (Exception e) {
                 AccountMappingResult result = new AccountMappingResult();
+                system.debug(e);
                 result.success = false;
                 result.message = 'Error: ' + e.getMessage();
+                result.code = e.getMessage();
                 result.accountId = null;
                 results.add(result);
             }
@@ -38,9 +40,6 @@ global with sharing class AccountMappingService {
         
         @InvocableVariable(required=true label='Document Type' description='Document type de la cuenta')
         global String documentType;
-        
-        @InvocableVariable(required=true label='Phone Number' description='phone de la cuenta')
-        global String phoneNumber;
     }
     
     global class AccountMappingResult {
@@ -52,5 +51,8 @@ global with sharing class AccountMappingService {
         
         @InvocableVariable(label='Account' description='cuenta mapeada')
         global String accountId;
+        
+        @InvocableVariable(label='Code' description='Codigo de error')
+        global String code;
     }
 }

@@ -40,6 +40,11 @@
                 <default>false</default>
                 <label>Not Found</label>
             </value>
+            <value>
+                <fullName>Internal Server Error</fullName>
+                <default>false</default>
+                <label>Internal Server Error</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
