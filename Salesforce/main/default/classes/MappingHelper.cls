@@ -138,30 +138,34 @@ public class MappingHelper {
 			FROM Int_RequestMapping_PersonAccount__mdt ];
 			Account acc =new Account();
 			for(Int_RequestMapping_PersonAccount__mdt requestMapping : requestMappingPersonAcc){
-				if(isPerson){
+				if(isPerson && requestMapping.Value__c=='IsPerson__c'){
 					acc.put('IsPerson__c',true );
-                }if(requestMapping.DeveloperName == 'phone'){
+                /*}else if(requestMapping.DeveloperName == 'phone'&& accountMap.get('phone')!=null){
+                    fiel_error=requestMapping.Value__c + ' con valor ' + accountMap.get('phone');
                     String phone = (String) ((Map<String, Object>) accountMap.get('phone')).get('number');
                     String area = (String) ((Map<String, Object>) accountMap.get('phone')).get('area');
-                    if(phone!=null && area!=null){
-                        acc.put(requestMapping.Value__c, area+phone);
-                    }
-                }else if(requestMapping.DeveloperName == 'images'){
+                    fiel_error=requestMapping.Value__c + ' con valor ' + phone;
+                    if(phone!=null){
+                       // acc.put(requestMapping.Value__c, area+phone);
+                       acc.put(requestMapping.Value__c, phone);
+                    }*/
+                }else if(requestMapping.DeveloperName == 'images' && accountMap.get('images')!=null){
                    List<Object> images= (List<Object>) accountMap.get('images');
+                   String fileIcon = getImg('fileIcon');
                     if(images.size()>0){
                         Integer i =0;
-                        String list_image='<ul>';
+                        String list_image='';
                         while (i<images.size()){
-                            list_image=list_image+'<li><a href="'+((Map<String, Object>) images[i]).get('url')+'" >'+((Map<String, Object>) images[i]).get('description')+'</a>';
+                            list_image=list_image+'<p><a href="'+((Map<String, Object>) images[i]).get('url')+'" >'+fileIcon+' '+((Map<String, Object>) images[i]).get('description')+'</a></p>';
                             i++;
                         }
-                        list_image=list_image+'</ul>';
+                        
                         acc.put(requestMapping.Value__c,list_image );
                     }
                 }else if(requestMapping.Type__c == 'Date'){
 					String account_date = String.valueOf(accountMap.get(requestMapping.DeveloperName));
-					fiel_error=requestMapping.Value__c + ' con valor ' + account_date;
 					Date account_date_format=Date.valueOf(account_date);
+                    fiel_error=requestMapping.Value__c + ' con valor ' + account_date_format;
 					acc.put(requestMapping.Value__c,account_date_format );
 				}else if(requestMapping.DeveloperName=='documentType'){
 					String documentType = String.valueOf(accountMap.get(requestMapping.DeveloperName));
@@ -220,6 +224,21 @@ public class MappingHelper {
 			return accwrapper;
 		}
 	}
+    
+    private static String getImg(String fileName){
+        StaticResource static_resource = [SELECT Id, SystemModStamp, Name
+                                      FROM StaticResource 
+                                      WHERE Name = :fileName
+                                      LIMIT 1];
+        String url_file_ref = '/resource/'
+                            + String.valueOf(((DateTime)static_resource.get('SystemModStamp')).getTime())
+                            + '/' 
+                            + static_resource.get('Name');
+    
+        String imgTag = '<img src="'+url_file_ref+'" style="margin-bottom: 3px;">';
+        return imgTag;
+	}
+    
 	public static AccountCompanyWrapper mapCompanyAccountFields(Map<String, Object> companyMap ){
 		string fiel_error;
 		AccountCompanyWrapper accwrapper = new AccountCompanyWrapper();

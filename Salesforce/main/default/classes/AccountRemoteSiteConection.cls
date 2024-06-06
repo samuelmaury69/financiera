@@ -41,7 +41,11 @@ public class AccountRemoteSiteConection {
                 insert list_integration_logs;
                 System.debug('Error al consumir el servicio: ' + response.getStatusCode() + ' - ' + response.getStatus());
                 String message='Error al consumir el servicio: ' + response.getStatusCode() + ' - ' + response.getStatus();
-                IntegrationLogUtils.insertIntegrationServiceLog(request, response, endpoint,parametersMap.get('documentId'),message);
+                if(parametersMap.get('documentId')!=null){
+                	IntegrationLogUtils.insertIntegrationServiceLog(request, response, endpoint,parametersMap.get('documentId'),message);
+                }else{
+                    IntegrationLogUtils.insertIntegrationServiceLog(request, response, endpoint,'',message);
+                }
             }
         }catch(Exception ex){
             system.debug('catch conection');
