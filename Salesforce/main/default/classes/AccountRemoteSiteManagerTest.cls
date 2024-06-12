@@ -5,7 +5,7 @@ public class AccountRemoteSiteManagerTest {
     @testSetup 
     static void testSetup(){
         
-        Ueno_Service_Domain__c testUrl= new Ueno_Service_Domain__c(ApiKey__c = '3aa37709-746e-4e1d-973b-a05525b2c837',DomainName__c='https://kongcloud.ind-dev-sae1.ueno.com.py');
+        Ueno_Service_Domain__c testUrl= new Ueno_Service_Domain__c(ApiKey__c = '555-555-555',DomainName__c='https://kongcloud.ind-dev-sae1.ueno.com.py');
         insert testUrl;
     }
     

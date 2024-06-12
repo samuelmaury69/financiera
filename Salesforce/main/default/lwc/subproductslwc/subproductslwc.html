@@ -1,0 +1,480 @@
+<template>
+    <!-- SAVINGS: Products Webservice OK, Movements OK, Design OK -->
+    <template if:true={isSavings}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={savingsresponse} for:item="saving">
+                <div key={saving.accountNumber} class="custom-box" onclick={handleSavingClick}
+                    data-account-number={saving.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/dtjA4rZ.png" alt="Caja de ahorro" width="16" height="16" /> <strong>  {saving.accountNumber}</strong></h2>
+
+                        <template if:true={saving.isActive}>
+                            <div class="pill success-pill">{saving.status}</div>
+                        </template>
+                        <template if:true={saving.isNeutral}>
+                            <div class="pill neutral-pill">{saving.status}</div>
+                        </template>
+                        <template if:true={saving.isError}>
+                            <div class="pill error-pill">{saving.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+
+                    <div class="container-details">
+                        <p><strong>Moneda: </strong>{saving.currencyDes}</p>   
+
+                        <p><strong>Denominación: </lightning-helptext></strong><strong>{saving.denominationShort}</strong>...<lightning-helptext content={saving.denomination} class="allign-help-text"></lightning-helptext></p>    
+                    </div>                                       
+                </div>
+            </template>
+        </div>
+
+        <template if:true={selectedSavingDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-text-align_center slds-col slds-size_1-of-1">
+                    <div class="slds-float_right">
+                        <button class="slds-button slds-m-left_x-small black" onclick={handleMovementsSavings} title="Movimientos"> 
+                            <u>Movimientos</u>
+                            <lightning-icon icon-name="utility:chevrondown" size="xx-small" alternative-text="Chevron Down"></lightning-icon>
+                        </button>
+
+                    </div>
+                    <h2 class="slds-text-heading_small slds-float_left"><strong>Detalle</strong></h2>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Saldo: </strong><lightning-formatted-number value={selectedSaving.balance} maximum-fraction-digits="2"></lightning-formatted-number></p>
+                    <p><strong>Fecha de Apertura:</strong> {selectedSaving.openingDate}</p>
+                    <p><strong>Fecha de Cambio de Estado:</strong> {selectedSaving.statusChangeDate}</p>
+                </div>
+
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Saldo Retenido:</strong> {selectedSaving.retainedBalance}</p>
+                    <p><strong>Saldo Bloqueado:</strong> {selectedSaving.blockedBalance}</p>
+                    <p><strong>Relación:</strong></p>
+
+                </div>
+            </div>
+        </template>
+        
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>      
+
+        <template if:true={recentSavingMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-float_right">
+                    <button class="slds-button slds-m-left_x-small black" onclick={handleReturnSavings} title="Volver"> 
+                        <u>Volver</u>
+                        <lightning-icon icon-name="utility:chevronup" size="xx-small" alternative-text="Chevron Up"></lightning-icon>
+                    </button>
+
+                </div>
+                <h3 class="slds-text-heading_small"><strong>Movimientos</strong></h3>
+                <br>
+
+                <lightning-datatable key-field="documentNumber" data={recentSavingMovements}
+                    columns={savingMovementColumns} hide-checkbox-column="true">
+                </lightning-datatable>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioSavings}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteSavings}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron (mas) movimientos relacionados</strong>
+        </template>
+    </template>
+
+    <!-- CHECKINGS: Products Webservice OK, Movements: OK, Design OK -->
+    <template if:true={isCheckings}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={checkingsresponse} for:item="checking">
+                <div key={checking.accountNumber} class="custom-box" onclick={handleCheckingClick}
+                    data-account-number={checking.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/M6qjzk1.png" alt="Caja de ahorro" width="16" height="16" /><strong>  {checking.accountNumber}</strong></h2>
+
+                        <template if:true={checking.isActive}>
+                            <div class="pill success-pill">{checking.status}</div>
+                        </template>
+                        <template if:true={checking.isNeutral}>
+                            <div class="pill neutral-pill">{checking.status}</div>
+                        </template>
+                        <template if:true={checking.isError}>
+                            <div class="pill error-pill">{checking.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+                    <div class="container-details">
+
+                    <p><strong>Moneda: </strong>{checking.currencyDes}</p>   
+
+                    <p><strong>Denominación: </lightning-helptext></strong><strong>{checking.denominationShort}</strong>...<lightning-helptext content={checking.denomination} class="allign-help-text"></lightning-helptext></p>     
+                    </div>
+
+                </div>
+            </template>
+        </div>
+
+        <template if:true={selectedCheckingDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-text-align_center slds-col slds-size_1-of-1">
+                    <div class="slds-float_right">
+                        <button class="slds-button slds-m-left_x-small black" onclick={handleMovementsCheckings} title="Movimientos"> 
+                            <u>Movimientos</u>
+                            <lightning-icon icon-name="utility:chevrondown" size="xx-small" alternative-text="Chevron Down"></lightning-icon>
+                        </button>
+
+                    </div>
+                    <h2 class="slds-text-heading_small slds-float_left"><strong>Detalle</strong></h2>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Saldo:</strong> {selectedChecking.balance}</p>
+                    <p><strong>Firma Registrada:</strong> {selectedChecking.signatureRegistered}</p>
+                    <p><strong>Cantidad de Firmas Requeridas:</strong> {selectedChecking.requiredSignaturesQty}</p>
+                    <p><strong>Cantidad de Firmas Registradas:</strong> {selectedChecking.registeredSignaturesQty}</p>
+                    <p><strong>Monto de Débitos Pendientes:</strong> {selectedChecking.pendingDebitsAmount}</p>
+                    <p><strong>Monto de Créditos Pendientes:</strong> {selectedChecking.pendingCreditsAmount}</p>
+                    <p><strong>Monto de Confirmación de Créditos Pendientes:</strong>
+                        {selectedChecking.pendingConfirmationCreditsAmount}</p>
+                    <p><strong>Fecha de Apertura:</strong> {selectedChecking.openingDate}</p>
+                    <p><strong>Cuenta Combinada:</strong> {selectedChecking.isCombinedAccount}</p>
+
+                </div>
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Fecha del Último Movimiento:</strong> {selectedChecking.lastMovementDate}</p>
+                    <p><strong>Fecha del Último Extracto:</strong> {selectedChecking.lastExtractDate}</p>
+                    <p><strong>Saldo del Último Extracto:</strong> {selectedChecking.lastExtractBalance}</p>
+                    <p><strong>Nombre de Chequera:</strong> {selectedChecking.checkbookName}</p>
+                    <p><strong>Código de Canal:</strong> {selectedChecking.channelCode}</p>
+                    <p><strong>Fecha de Cambio de Estado:</strong> {selectedChecking.statusChangeDate}</p>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={recentCheckingMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-float_right">
+                    <button class="slds-button slds-m-left_x-small black" onclick={handleReturnCheckings} title="Volver"> 
+                        <u>Volver</u>
+                        <lightning-icon icon-name="utility:chevronup" size="xx-small" alternative-text="Chevron Up"></lightning-icon>
+                    </button>
+                </div>
+                <h3 class="slds-text-heading_small"><strong>Movimientos</strong></h3>
+                <br>
+
+                <lightning-datatable key-field="documentNumber" data={recentCheckingMovements}
+                    columns={savingMovementColumns} hide-checkbox-column="true">
+                </lightning-datatable>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioCheckings}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteCheckings}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron (mas) movimientos relacionados</strong>
+        </template>
+
+    </template>
+
+    <!-- LOANS: Products Webservice OK, Movements: OK, Design OK -->
+    <template if:true={isLoans}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={loansresponse} for:item="loan">
+                <div key={loan.accountNumber} class="custom-box" onclick={handleLoanClick}
+                    data-account-number={loan.accountNumber}>
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/E75mVHz.png" alt="Caja de ahorro" width="16" height="16" /> <strong>  {loan.accountNumber}</strong></h2>
+
+                        <template if:true={loan.isActive}>
+                            <div class="pill success-pill">{loan.status}</div>
+                        </template>
+                        <template if:true={loan.isNeutral}>
+                            <div class="pill neutral-pill">{loan.status}</div>
+                        </template>
+                        <template if:true={loan.isError}>
+                            <div class="pill error-pill">{loan.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+
+                    <div class="container-details">
+                        <p><strong>Tipo: </strong>{loan.type}</p>    
+                        <p><strong>Inicio: </strong> {loan.loanEffectiveDate}</p>
+                    </div>
+
+                </div>
+            </template>
+        </div>
+
+        <template if:true={selectedLoanDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+
+                <div class="slds-text-align_center slds-col slds-size_1-of-1">
+                    <div class="slds-float_right">
+                        <button class="slds-button slds-m-left_x-small black" onclick={handleMovementsLoans} title="Movimientos"> 
+                            <u>Movimientos</u>
+                            <lightning-icon icon-name="utility:chevrondown" size="xx-small" alternative-text="Chevron Down"></lightning-icon>
+                        </button>
+
+                    </div>
+                    <h2 class="slds-text-heading_small slds-float_left"><strong>Detalle</strong></h2>
+                </div>
+
+                <br>
+                <br>
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Total: </strong>{selectedLoan.totalAmount}</p>
+                    <p><strong>Tipo de operacion:</strong> {selectedLoan.modality}</p>
+                    <p><strong>Moneda:</strong> {selectedLoan.currencyDes}</p>
+                    <p><strong>Subtipo:</strong> {selectedLoan.loanType}</p>
+                    <p><strong>Deuda Pendiente:</strong> {selectedLoan.pendingDebt}</p>                   
+                    <p><strong>Monto Expirado:</strong> {selectedLoan.expiredAmount}</p>
+                    <p><strong>Cargos por Cancelación Anticipada:</strong> {selectedLoan.earlyCancellationCharges}</p>
+                    <p><strong>Seguro de Cancelación de Deuda:</strong> {selectedLoan.debtCancellationInsurance}</p>
+                    <p><strong>Días de Atraso:</strong> {selectedLoan.daysPastDue}</p>
+                    <p><strong>Saldo de Capital:</strong> {selectedLoan.capitalBalance}</p>
+                    <p><strong>Seguro de Sepelio:</strong> {selectedLoan.burialInsurance}</p>
+                    <p><strong>Alias:</strong> {selectedLoan.alias}</p>
+                    <p><strong>Comisión Administrativa:</strong> {selectedLoan.administrativeCommission}</p>
+                </div>
+                <div class="slds-col slds-size_1-of-2 some-padding-right">
+                    <p><strong>Seguro de Desempleo:</strong> {selectedLoan.unemploymentInsurance}</p>
+                    <p><strong>Tasa:</strong> {selectedLoan.tas}</p>
+                    <p><strong>Fecha de Inicio: </strong>{selectedLoan.startDate}</p>
+                    <p><strong>Número de Solicitud:</strong> {selectedLoan.requestNumber}</p>
+                    <p><strong>Monto a Pagar:</strong> {selectedLoan.payoffAmount}</p>
+                    <p><strong>Monto Desembolsado:</strong> {selectedLoan.outlayAmount}</p>
+                    <p><strong>Último Monto Total Pagado:</strong> {selectedLoan.lastTotalAmountPaid}</p>
+                    <p><strong>Última Fecha de Pago :</strong> {selectedLoan.lastPaymentDate}</p>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:true={recentLoanMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-float_right">
+                    <button class="slds-button slds-m-left_x-small black" onclick={handleReturnLoans} title="Volver"> 
+                        <u>Volver</u>
+                        <lightning-icon icon-name="utility:chevronup" size="xx-small" alternative-text="Chevron Up"></lightning-icon>
+                    </button>
+                </div>
+                <h3 class="slds-text-heading_small"><strong>Cuotas</strong></h3>
+                <br>
+
+                <lightning-datatable key-field="documentNumber" data={recentLoanMovements} columns={loanColumns}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioLoans}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente" onclick={handleSiguienteLoans}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+    </template>
+
+
+    <!-- CARDS: Products WebService OK, Movements: KO, Design: TODO -->
+    <template if:true={isCards}>
+        <div class="c-container slds-scrollable_x">
+            <template for:each={cardsresponse} for:item="cardToProcess">
+                <div key={cardToProcess.cardNumber} class="custom-box"
+                    data-card-number={cardToProcess.cardNumber} onclick={handleCardClick}>
+
+
+
+                    <div class="title-section">
+                        <h2 class="account-title"><img style="margin-top: -2px;" src="https://i.imgur.com/ZdMiVuW.png" alt="Tarjeta" width="16" height="16" /> 
+                            <template if:true={cardToProcess.isCredit}> Credito</template>
+                            <template if:false={cardToProcess.isCredit}> Debito</template>
+                            <strong> {cardToProcess.cardNumberShort}</strong></h2>
+
+                        <template if:true={cardToProcess.isActive}>
+                            <div class="pill success-pill">{cardToProcess.status}</div>
+                        </template>
+                        <template if:true={cardToProcess.isNeutral}>
+                            <div class="pill neutral-pill">{cardToProcess.status}</div>
+                        </template>
+                        <template if:true={cardToProcess.isError}>
+                            <div class="pill error-pill">{cardToProcess.status}</div>
+                        </template>
+                    </div>
+
+                    <hr class="faded-line">
+
+                    <div class="container-details">
+                        <!-- <p><strong>Código de persona:</strong> {cardToProcess.personCode}</p> -->
+                        <p><strong>Nombre:</strong> {cardToProcess.name}</p>
+                        <p><strong>Tipo:</strong> {cardToProcess.cardType}</p>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+
+        <template if:true={selectedCardDetailNumber}>
+            <div class="slds-grid slds-wrap some-margin-both-sides">
+                <div class="slds-text-align_center slds-col slds-size_1-of-1">
+                    <template if:true={selectedCardIsCredit}>
+                        <div class="slds-float_right">
+                            <button class="slds-button slds-m-left_x-small black" onclick={handleMovementsCards} title="Movimientos"> 
+                                <u>Movimientos</u>
+                                <lightning-icon icon-name="utility:chevrondown" size="xx-small" alternative-text="Chevron Down"></lightning-icon>
+                            </button>
+                        </div>
+                    </template>
+                    <h2 class="slds-text-heading_small slds-float_left"><strong>Detalle</strong></h2>
+                </div>
+                <br>
+                <br>
+
+                <!-- CREDITO -->
+                <template if:true={selectedCardIsCredit}>
+
+                    <div class="slds-col slds-size_1-of-2 some-padding-right">
+                        <p><strong>Numero de cuenta:</strong> {selectedCard.accountNumber}</p>
+                        <p><strong>Linea de crédito:</strong> {selectedCard.creditLine}</p>
+                        <p><strong>Linea de crédito usada:</strong> {selectedCard.creditLineUsed}</p>
+                        <p><strong>Moneda:</strong> {selectedCard.currencyDes}</p>
+                        <p><strong>Pagos del mes:</strong> {selectedCard.monthPaymentAmount}</p>
+                        <p><strong>Cuenta de débito:</strong> </p>
+                        <p><strong>Fecha de Vencimiento:</strong> {selectedCard.dueDate}</p>
+                        <p><strong>Titular:</strong> {selectedCard.holder}</p>        
+                        <p><strong>Deuda Total:</strong> {selectedCard.totalDebt}</p>
+                        <p><strong>Tipo de Pago Débito Automático:</strong> {selectedCard.paymentTypeAutomaticDebit}</p>
+                        <p><strong>Monto de Pago Mensual:</strong> {selectedCard.monthPaymentAmount}</p>
+                        <p><strong>Pago Mínimo:</strong> {selectedCard.minimumPay}</p>
+                        <p><strong>Fecha del Último Pago:</strong> {selectedCard.lastPaymentDate}</p>
+                        <p><strong>Último Pago:</strong> {selectedCard.lastPayment}</p>
+                        <p><strong>Tasa de Interés:</strong> {selectedCard.interestRate}</p>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 some-padding-right">
+                        <p><strong>Tiene Débito Automático:</strong> {selectedCard.hasAutomaticDebit}</p>
+                        <p><strong>Tasa de Financiamiento:</strong> {selectedCard.financingRate}</p>
+                        <p><strong>Fecha de Expiración del Extracto:</strong> {selectedCard.extractExpirationDate}</p>
+                        <p><strong>Deuda al Cierre:</strong> {selectedCard.closingDebt}</p>
+                        <p><strong>Reembolso:</strong> {selectedCard.cashBack}</p>
+                        <p><strong>Color de la Tarjeta:</strong> {selectedCard.cardColor}</p>
+                        <p><strong>Línea de Crédito Disponible:</strong> {selectedCard.availableCreditLine}</p>
+                        <p><strong>Afinidad:</strong> {selectedCard.affinity}</p>
+                        <p><strong>Número de Cuenta:</strong> {selectedCard.accountNumber}</p>
+                    </div>
+                </template>
+
+                <!-- DEBITO -->
+                <template if:false={selectedCardIsCredit}>
+                    <div class="slds-col slds-size_1-of-2 some-padding-right">
+                        <p><strong>Numero de cuenta:</strong> {selectedCard.accountNumber}</p>
+                        <p><strong>Código de Oficina de Origen:</strong> {selectedCard.originOfficeCode}</p>
+                        <p><strong>Fecha del Último Movimiento en Cajero Automático:</strong>
+                            {selectedCard.lastATMMovementDate}</p>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 some-padding-right">
+                        <p><strong>Número de Tarjeta:</strong> {selectedCard.cardNumber}</p>
+                        <p><strong>Fecha de Vencimiento:</strong> {selectedCard.dueDate}</p>
+                        <p><strong>Fecha de Cancelación:</strong> {selectedCard.cancellationDate}</p>
+                        <p><strong>Fecha de Activación:</strong> {selectedCard.activationDate}</p>
+                    </div>
+                </template>
+
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+        <template if:false={movementsFound}>
+            <strong>No se encontraron movimientos relacionados</strong>
+        </template>
+
+        <template if:true={recentCardMovements}>
+            <div class="some-margin-both-sides">
+
+                <div class="slds-float_right">                    
+                    <button class="slds-button slds-m-left_x-small black" onclick={handleReturnCards} title="Volver"> 
+                        <u>Volver</u>
+                        <lightning-icon icon-name="utility:chevronup" size="xx-small" alternative-text="Chevron Up"></lightning-icon>
+                    </button>
+                </div>
+                <h3 class="slds-text-heading_small"><strong>Movimientos</strong></h3>
+                <br>
+
+                <lightning-datatable key-field="documentNumber" data={recentCardMovements}
+                    columns={genericMovementColumns} hide-checkbox-column="true">
+                </lightning-datatable>
+
+                <div class="slds-float_left">
+                    <lightning-button variant="base" label="Previo" title="Previo" onclick={handlePrevioCards}
+                        class="slds-m-left_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <div class="slds-float_right">
+                    <lightning-button variant="base" label="Siguiente" title="Siguiente"
+                        onclick={handleSiguienteCards}
+                        class="slds-m-right_x-small slds-p-around_medium"></lightning-button>
+                </div>
+                <br>
+                <br>
+            </div>
+        </template>
+
+
+
+    </template>
+</template>

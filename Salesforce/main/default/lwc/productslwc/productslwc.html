@@ -1,0 +1,22 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+
+    <template if:true={hasErrors}>
+        <strong>{errorMessage}</strong>
+    </template>
+
+    <template if:true={noResults}>
+        <strong>No se encontraron resultados</strong>
+    </template>
+
+    <template if:false={hasErrors}>
+        <template if:false={isLoading}>
+            <c-subproductslwc producttype={producttype} personcode={personCode} savingsresponse={savingsresponse}
+                checkingsresponse={checkingsresponse} cardsresponse={cardsresponse}
+                loansresponse={loansresponse}               
+                ></c-subproductslwc>
+        </template>
+    </template>
+</template>

@@ -9,11 +9,22 @@ public class MappingHelper {
 	public class AccountWrapper{
 		public Account currentaccount;
 		public String message;
+        public AccountWrapper(){}
+        public AccountWrapper(Account currentaccount,String message){
+            this.currentaccount = currentaccount;
+            this.message = message;
+        }
 	}
 	public class AccountCompanyWrapper{
 		public Account currentaccount;
 		Public List<Account> listPerson;
 		public String message;
+        public AccountCompanyWrapper(){}
+        public AccountCompanyWrapper(Account currentaccount, List<Account> listPerson, String message){
+            this.currentaccount = currentaccount;
+            this.listPerson = listPerson;
+            this.message = message;
+        }
 	}
 	public static Wrapper getAccountFrombankitti(String documentId, String documentType) {
 		try {
@@ -219,9 +230,7 @@ public class MappingHelper {
 			system.debug(fiel_error);
 			system.debug(accwrapper);
 			system.debug(e +' '+ fiel_error+ ' error en el mapeo');
-			accwrapper.currentaccount=null;
-			accwrapper.message='601';
-			return accwrapper;
+            return new AccountWrapper(null,'601');
 		}
 	}
     
@@ -284,9 +293,10 @@ public class MappingHelper {
 		}catch(Exception e){
 			system.debug('listado de personas');
 			system.debug(persons_account);
-			accwrapper.currentaccount=null;
-			accwrapper.message='601';
-			return accwrapper;
+            return new AccountCompanyWrapper(null,null,'601');
+			//accwrapper.currentaccount=null;
+			//accwrapper.message='601';
+			//return accwrapper;
 		}
 	}
 }

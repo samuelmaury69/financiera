@@ -1,0 +1,134 @@
+.c-container {
+   /* border: 1px solid #d8dde6; */
+    margin: 32px 20px 20px 20px !important;;
+    height: auto;
+    overflow-x: auto;
+    display: flex;
+}
+.scroll-wrapper {
+    overflow-x: auto !important;;
+    overflow-y: hidden;
+    white-space: nowrap !important;;
+    -webkit-overflow-scrolling: touch;
+}
+
+ .custom-box {
+    text-align: center;
+    /*background-color: #f4f6f9;*/
+    padding: 20px;
+    border: 1px solid #C6C6CC;
+    margin-right: 20px;
+    width: 45%;
+    border-radius: 15px;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.some-margin-both-sides{
+    margin-right: 20px;
+    margin-left: 20px;
+}
+.some-padding-right{
+    padding-right: 20px !important;
+}
+
+.custom-box-active {
+    border: 2px solid #252529; 
+}
+
+.detalleCuenta{    
+    height: 300px;
+    font-weight: 300px;
+    border: 1px solid #C6C6CC;
+    background-color: #f4f6f9;
+    margin: 5px;
+    padding: 1rem;
+}
+
+.movimientosContainer {
+    margin-top: 10px;
+}
+
+.detailContainer{
+   /* border: 1px solid #d8dde6;*/
+    border: 2px solid #252529; 
+    border-radius: 15px;
+    padding: 10px;
+}
+
+
+
+
+.pill {
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: 1em;
+    color: white;
+
+    text-align: center;
+
+}
+
+.success-pill {
+    background-color: #D6FCEC; /* Green for success */
+    font-weight: 500;
+    color:#146542;
+    font-size: smaller;
+}
+
+.neutral-pill {
+    background-color: #EAEAEB; /* Gray for neutral */
+    font-weight: 500;
+    color:#252529;
+    font-size: smaller;
+}
+
+.error-pill {
+    background-color: #FFE5EC; /* Red for error */
+    font-weight: 500;
+    color:#99173C;
+    font-size: smaller;
+}
+
+.faded-line {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 10px 0;
+}
+
+.title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.account-title {
+    margin: 0;
+    color:#252529;
+    font-size: 14px;
+}
+
+
+.denomination {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 10%; 
+    text-overflow: ellipsis;
+    display: inline-flex;
+  }
+.allign-help-text{
+    position: relative;
+    top: -4px;
+}
+
+.container-details{
+    display: flex;
+    align-items: baseline;
+    margin: 0;
+    flex-direction: column;
+}
+
+.black{
+    color: black;
+}

@@ -1,10 +1,10 @@
 global with sharing class AccountMappingService {
+    //AccountMappingService.mapAccountData();
     @InvocableMethod(label='Map Account Data' description='Maps the account data from the provided parameters')
     global static List<AccountMappingResult> mapAccountData(List<AccountMappingRequest> requests) {
-        System.debug('mapAccountData Function');
         List<AccountMappingResult> results = new List<AccountMappingResult>();
         for (AccountMappingRequest request : requests) {
-            try {
+            //try {
                 //AccountServiceHelper.Wrapper accountWrapper = AccountServiceHelper.getAccountFrombankitti(request.documentId, request.documentType, request.phoneNumber);
                 MappingHelper.Wrapper accountWrapper = MappingHelper.getAccountFrombankitti(request.documentId, request.documentType);
                 AccountMappingResult result = new AccountMappingResult();
@@ -20,15 +20,11 @@ global with sharing class AccountMappingService {
                 }
                 
                 results.add(result);
-            } catch (Exception e) {
-                AccountMappingResult result = new AccountMappingResult();
+            /*} catch (Exception e) {
+                AccountMappingResult result = new AccountMappingResult(false,'Error: ' + e.getMessage(),e.getMessage(),null);
                 system.debug(e);
-                result.success = false;
-                result.message = 'Error: ' + e.getMessage();
-                result.code = e.getMessage();
-                result.accountId = null;
                 results.add(result);
-            }
+            }*/
         }
         
         return results;
@@ -54,5 +50,6 @@ global with sharing class AccountMappingService {
         
         @InvocableVariable(label='Code' description='Codigo de error')
         global String code;
+        public AccountMappingResult(){}
     }
 }
